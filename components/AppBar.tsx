@@ -1,12 +1,12 @@
 "use Client";
 import { Menu } from "lucide-react";
 import { Toggle } from "./ui/toggle";
-interface IProps {
+export interface IAppbarProps {
   title: string;
   setCollapsed: (isCollapsed: boolean) => void;
 }
 
-export const Appbar: React.FC<IProps> = ({ title, setCollapsed }) => {
+export const Appbar: React.FC<IAppbarProps> = ({ title, setCollapsed }) => {
   const toogle = (isCollapsed: boolean) => {
     //console.log(isCollapsed);
     setCollapsed(isCollapsed);

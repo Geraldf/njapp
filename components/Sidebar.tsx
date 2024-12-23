@@ -2,15 +2,15 @@ import React from "react";
 import Link from "next/link";
 import { Home, Info, Mail } from "lucide-react";
 
-interface IProps {
+export interface ISidebarProps {
   isColapsed: boolean;
 }
 
-export const Sidebar: React.FC<IProps> = ({ isColapsed }) => {
+export const Sidebar: React.FC<ISidebarProps> = ({ isColapsed }) => {
   return (
     <aside
       className={`bg-gray-800 text-white sticky pl-2  top-14 h-[calc(100vh-theme(spacing.16))] w-40 overflow-y-auto ${
-        isColapsed ? "w-20" : "w-64"
+        isColapsed ? "w-8" : "w-64"
       } transition-width duration-300`}
     >
       <h2
