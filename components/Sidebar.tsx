@@ -2,10 +2,14 @@ import React from "react";
 import Link from "next/link";
 import { Home, Info, Mail } from "lucide-react";
 
-export const Sidebar = ({ isColapsed }: { isColapsed: boolean }) => {
+interface IProps {
+  isColapsed: boolean;
+}
+
+export const Sidebar: React.FC<IProps> = ({ isColapsed }) => {
   return (
     <div
-      className={`bg-gray-800 text-white p-4 ${
+      className={`bg-gray-800 text-white p-4 h-screen overflow-hidden ${
         isColapsed ? "w-20" : "w-64"
       } transition-width duration-300`}
     >
