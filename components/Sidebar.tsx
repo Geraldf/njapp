@@ -4,8 +4,8 @@ import { Home, Info, Mail } from "lucide-react";
 
 export const Sidebar = ({ isColapsed }: { isColapsed: boolean }) => {
   return (
-    <div
-      className={`bg-gray-800 text-white p-4 ${
+    <aside
+      className={`bg-gray-800 text-white sticky top-14 h-[calc(100vh-theme(spacing.16))] w-40 overflow-y-auto ${
         isColapsed ? "w-20" : "w-64"
       } transition-width duration-300`}
     >
@@ -45,6 +45,6 @@ export const Sidebar = ({ isColapsed }: { isColapsed: boolean }) => {
           </Link>
         </li>
       </ul>
-    </div>
+    </aside>
   );
 };
