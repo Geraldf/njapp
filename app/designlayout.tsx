@@ -1,26 +1,60 @@
 "use client";
-import { IAppbarProps } from "@/components/AppBar";
-import { ISidebarProps } from "@/components/Sidebar";
-import { Toggle } from "@/components/ui/toggle";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Menu, SquareMenu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { twMerge } from "tailwind-merge";
 
+/**
+ * Interface for the layout properties.
+ */
 interface ILayoutProps {
-  sitebar?: ISidebarProps;
-  appbar?: IAppbarProps;
+  /** The children nodes to be rendered within the layout. */
+  children?: ReactNode;
+  /** Array of menu items to be displayed in the sidebar. */
+  MenuItems: iMenuItems[];
+  userClassName?: string;
 }
 
-export const DesignLayout = () => {
+/**
+ * Interface for the menu items.
+ */
+export interface iMenuItems {
+  /** The name of the menu item. */
+  name: string;
+  /** The link URL for the menu item. */
+  link: string;
+  /** The icon component for the menu item. */
+  icon: React.FC<{ className?: string }>;
+}
+
+/**
+ * The DesignLayout component provides a layout with a fixed header, collapsible sidebar, and main content area.
+ * @param {ILayoutProps} props - The properties for the layout component.
+ * @returns {JSX.Element} The rendered layout component.
+ */
+export const DesignLayout = ({
+  children,
+  MenuItems,
+  userClassName,
+}: ILayoutProps): JSX.Element => {
   const [isColapsed, setIsColapsed] = useState(false);
+
+  /**
+   * Toggles the collapsed state of the sidebar.
+   */
   const toogle = () => {
     console.log(isColapsed);
     setIsColapsed(!isColapsed);
   };
+  const classes = twMerge(`h-16 bg-white border-b flex items-center px-4 fixed top-0 left-0 right-0 z-50 ${userClassName }`);
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed App Bar */}
-      <header className="h-16 bg-white border-b flex items-center px-4 fixed top-0 left-0 right-0 z-50">
+      <header
+        className={classes}
+      >
         <Button
           variant={"ghost"}
           className="p-2 rounded focus:outline-none"
@@ -39,14 +73,20 @@ export const DesignLayout = () => {
             isColapsed ? "w-16" : "w-64"
           } bg-gray-50 border-r fixed left-0 top-16 bottom-0 overflow-y-auto transition-width duration-300`}
         >
-          <nav className="p-4">
-            <ul className="space-y-2">
-              {Array.from({ length: 20 }).map((_, index) => (
+          <nav>
+            <ul>
+              {MenuItems.map((item, index) => (
                 <li
                   key={index}
-                  className="p-2 hover:bg-gray-100 rounded cursor-pointer"
+                  className="p-2 hover:bg-gray-100 rounded cursor-pointer flex "
                 >
-                  Menu Item {index + 1}
+                  <Link
+                    className="flex items-center space-x-2"
+                    href={item.link}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.name}</span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -54,23 +94,12 @@ export const DesignLayout = () => {
         </aside>
 
         {/* Main Content with independent scroll and offset for sidebar */}
-        <main className="ml-64 flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-6">
-            <h2 className="text-2xl font-bold mb-4">Main Content</h2>
-            {Array.from({ length: 20 }).map((_, index) => (
-              <div key={index} className="mb-8">
-                <h3 className="text-lg font-semibold mb-2">
-                  Section {index + 1}
-                </h3>
-                <p className="text-gray-600">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris.
-                </p>
-              </div>
-            ))}
-          </div>
+        <main
+          className={`${
+            isColapsed ? "ml-16" : "ml-64"
+          } flex-1 overflow-y-auto transition-all duration-300`}
+        >
+          {children}
         </main>
       </div>
     </div>
