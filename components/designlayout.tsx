@@ -1,9 +1,10 @@
 "use client";
 import React, { ReactNode, useState } from "react";
-import { Menu, SquareMenu } from "lucide-react";
+import { ChevronRight, Menu, SquareMenu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import { usePathname } from 'next/navigation'
 
 /**
  * Interface for the layout properties.
@@ -23,10 +24,45 @@ export interface iMenuItems {
   /** The name of the menu item. */
   name: string;
   /** The link URL for the menu item. */
-  link: string;
+  link?: string;
   /** The icon component for the menu item. */
-  icon: React.FC<{ className?: string }>;
+  icon?: React.FC<{ className?: string }>;
 }
+
+const MenuItem = ({ item, segment, collapsed, children = null }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  // Inside you client component
+  
+
+  if (item.link) {
+    return (
+      <Link
+        className={segment === item.link ? 'text-primary font-semibold' : 'text-muted-foreground'}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)} href={item.link}    >
+        <div className="flex items-center  px-1 py-2 hover:bg-gray-100 cursor-pointer">
+          {item.icon && <item.icon className="w-4 h-4 mr-2" />}
+         {!collapsed && <span>{item.name}</span>}
+          {children && <ChevronRight className="w-4 h-4 ml-2" />}
+        </div>
+        {children && isHovered && (
+          <div className="absolute left-full top-0 bg-white shadow-lg rounded-md min-w-[200px] border border-gray-200">
+        {children}
+          </div>
+        )}
+      </Link>
+    );
+  } else {
+    return (
+      <div >
+        
+        <hr className="h-px bg-gray-900 border-0 rounded  dark:bg-black-900"></hr>
+      </div>
+    );
+  }
+};
+
+
 
 /**
  * The DesignLayout component provides a layout with a fixed header, collapsible sidebar, and main content area.
@@ -44,11 +80,11 @@ export const DesignLayout = ({
    * Toggles the collapsed state of the sidebar.
    */
   const toogle = () => {
-    console.log(isColapsed);
+    //console.log(isColapsed);
     setIsColapsed(!isColapsed);
   };
   const classes = twMerge(`h-16 bg-white border-b flex items-center px-4 fixed top-0 left-0 right-0 z-50 ${userClassName }`);
-
+  const segment =  usePathname()
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed App Bar */}
@@ -62,7 +98,7 @@ export const DesignLayout = ({
         >
           {isColapsed ? <Menu /> : <SquareMenu />}
         </Button>
-        <h1 className="text-xl font-semibold">App Name</h1>
+        <h1 className="text-xl font-semibold">App Name123</h1>
       </header>
 
       {/* Main container with offset for fixed header */}
@@ -70,23 +106,14 @@ export const DesignLayout = ({
         {/* Sidebar with independent scroll */}
         <aside
           className={`${
-            isColapsed ? "w-16" : "w-64"
+            isColapsed ? "w-8" : "w-64"
           } bg-gray-50 border-r fixed left-0 top-16 bottom-0 overflow-y-auto transition-width duration-300`}
         >
           <nav>
             <ul>
               {MenuItems.map((item, index) => (
-                <li
-                  key={index}
-                  className="p-2 hover:bg-gray-100 rounded cursor-pointer flex "
-                >
-                  <Link
-                    className="flex items-center space-x-2"
-                    href={item.link}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span>{item.name}</span>
-                  </Link>
+                <li key={index}>
+                  <MenuItem item={item} segment={segment} collapsed={isColapsed}/>
                 </li>
               ))}
             </ul>

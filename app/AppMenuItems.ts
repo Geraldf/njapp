@@ -1,4 +1,4 @@
-import { iMenuItems } from "./designlayout";
+import { iMenuItems } from "@/components/designlayout";
 import { Home, Info, Mail } from "lucide-react";
 
 export const AppMenuItems: iMenuItems[] = [
@@ -11,6 +11,10 @@ export const AppMenuItems: iMenuItems[] = [
     name: "About",
     link: "/about",
     icon: Info,
+  },
+  {
+    name: "Seperator",
+   
   },
   {
     name: "Contact",
